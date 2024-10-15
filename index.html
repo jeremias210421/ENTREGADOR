@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Entregas - MeuDelivery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" integrity="sha512-pap1+o9A5U/pDfFqO5/1P7kU4cTW9FzHdwIuBwHBh6zV1hJkJvXFFiWvWq0/Q78kI4sarBsfh6rD7c6M9Brw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        header .profile {
+            display: flex;
+            align-items: center;
+        }
+        header .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        header .profile span {
+            font-size: 16px;
+        }
+        nav {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        nav a {
+            text-decoration: none;
+            color: #555;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        nav a.active, nav a:hover {
+            color: #28a745;
+        }
+        nav a svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 5px;
+            fill: currentColor;
+            transition: transform 0.3s;
+        }
+        nav a.active svg, nav a:hover svg {
+            transform: scale(1.2);
+        }
+        main {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .deliveries-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 1000px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .deliveries-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+        .search-bar {
+            display: flex;
+                justify-content: flex-end;
+                margin-bottom: 20px;
+            }
+        .search-bar input {
+            padding: 10px;
+            font-size: 16px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        .search-bar input:focus {
+            border-color: #28a745;
+            outline: none;
+        }
+        .deliveries-list {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .deliveries-list th, .deliveries-list td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        .deliveries-list th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .status-pending {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        .status-delivered {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-cancelled {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #555;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .pagination a.active, .pagination a:hover {
+            background-color: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+        footer {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+        }
+        /* Responsive */
+        @media (max-width: 800px) {
+            .deliveries-list th, .deliveries-list td {
+                padding: 8px 10px;
+            }
+            .search-bar input {
+                width: 100%;
+            }
+        }
+        @media (max-width: 600px) {
+            nav {
+                flex-wrap: wrap;
+            }
+            nav a {
+                flex: 1 1 45%;
+                margin-bottom: 10px;
+            }
+            header .profile span {
+                display: none;
+            }
+            .deliveries-container {
+                padding: 15px;
+            }
+            .deliveries-container h2 {
+                font-size: 20px;
+            }
+            .deliveries-list th, .deliveries-list td {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+            .pagination a {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">MeuDelivery</div>
+        <div class="profile">
+            <img src="https://via.placeholder.com/40" alt="Foto do Entregador" width="40" height="40">
+            <span>João Silva</span>
+        </div>
+    </header>
+    <nav>
+        <a href="https://meudelivery.com/entregas">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 8h14v-2H7v2zm0-4h14v-2H7v2zm0-6v2h14V7H7z"/>
+            </svg>
+            Entregas
+        </a>
+        <a href="https://meudelivery.com/mapa">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
+            </svg>
+            Mapa
+        </a>
+        <a href="https://meudelivery.com/perfil-entregador">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+            </svg>
+            Perfil
+        </a>
+        <a href="https://meudelivery.com/configuracoes">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M19.14 12.936a7.978 7.978 0 0 0 .046-1.936 7.978 7.978 0 0 0-.046-1.936l2.037-1.58a.5.5 0 0 0 .121-.641l-1.928-3.341a.5.5 0 0 0-.607-.223l-2.4.96a8.05 8.05 0 0 0-1.68-.98l-.36-2.54A.5.5 0 0 0 14.7 2h-3.4a.5.5 0 0 0-.495.42l-.36 2.54a8.05 8.05 0 0 0-1.68.98l-2.4-.96a.5.5 0 0 0-.607.223l-1.928 3.341a.5.5 0 0 0 .121.641l2.037 1.58a7.978 7.978 0 0 0-.046 1.936 7.978 7.978 0 0 0 .046 1.936l-2.037 1.58a.5.5 0 0 0-.121.641l1.928 3.341a.5.5 0 0 0 .607.223l2.4-.96a8.05 8.05 0 0 0 1.68.98l.36 2.54a.5.5 0 0 0 .495.42h3.4a.5.5 0 0 0 .495-.42l.36-2.54a8.05 8.05 0 0 0 1.68-.98l2.4.96a.5.5 0 0 0 .607-.223l1.928-3.341a.5.5 0 0 0-.121-.641l-2.037-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/>
+            </svg>
+            Configurações
+        </a>
+    </nav>
+    <main>
+        <div class="deliveries-container">
+            <h2>Minhas Entregas - Página 2</h2>
+            <div class="search-bar">
+                <input type="text" placeholder="Buscar por pedido ou cliente...">
+            </div>
+            <table class="deliveries-list">
+                <thead>
+                    <tr>
+                        <th>Número do Pedido</th>
+                        <th>Cliente</th>
+                        <th>Endereço</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>#12348</td>
+                        <td>Ana Pereira</td>
+                        <td>R. do Sol, 456</td>
+                        <td class="status-delivered">Entregue</td>
+                        <td>21/04/2023</td>
+                        <td>
+                            <a href="https://meudelivery.com/detalhes-pedido/12348" title="Ver Detalhes"><i class="fas fa-eye"></i></a>
+                            <a href="https://meudelivery.com/editar-pedido/12348" title="Editar Pedido"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#12349</td>
+                        <td>Bruno Costa</td>
+                        <td>Av. Brasil, 789</td>
+                        <td class="status-pending">Pendente</td>
+                        <td>22/04/2023</td>
+                        <td>
+                            <a href="https://meudelivery.com/detalhes-pedido/12349" title="Ver Detalhes"><i class="fas fa-eye"></i></a>
+                            <a href="https://meudelivery.com/editar-pedido/12349" title="Editar Pedido"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#12350</td>
+                        <td>Carla Souza</td>
+                        <td>Rua das Acácias, 321</td>
+                        <td class="status-cancelled">Cancelado</td>
+                        <td>23/04/2023</td>
+                        <td>
+                            <a href="https://meudelivery.com/detalhes-pedido/12350" title="Ver Detalhes"><i class="fas fa-eye"></i></a>
+                            <a href="https://meudelivery.com/editar-pedido/12350" title="Editar Pedido"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#12351</td>
+                        <td>Daniel Lima</td>
+                        <td>Praça Central, 654</td>
+                        <td class="status-delivered">Entregue</td>
+                        <td>24/04/2023</td>
+                        <td>
+                            <a href="https://meudelivery.com/detalhes-pedido/12351" title="Ver Detalhes"><i class="fas fa-eye"></i></a>
+                            <a href="https://meudelivery.com/editar-pedido/12351" title="Editar Pedido"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>#12352</td>
+                        <td>Eduarda Martins</td>
+                        <td>Alameda Santos, 987</td>
+                        <td class="status-pending">Pendente</td>
+                        <td>25/04/2023</td>
+                        <td>
+                            <a href="https://meudelivery.com/detalhes-pedido/12352" title="Ver Detalhes"><i class="fas fa-eye"></i></a>
+                            <a href="https://meudelivery.com/editar-pedido/12352" title="Editar Pedido"><i class="fas fa-edit"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <a href="https://meudelivery.com/entregas?page=1">1</a>
+                <a href="https://meudelivery.com/entregas?page=2" class="active">2</a>
+                <a href="https://meudelivery.com/entregas?page=3">3</a>
+                <a href="https://meudelivery.com/entregas?page=4">4</a>
+                <a href="https://meudelivery.com/entregas?page=5">5</a>
+            </div>
+        </div>
+    </main>
+    <footer>
+        &copy; 2023 MeuDelivery. Todos os direitos reservados.
+    </footer>
+</body>
+</html>
