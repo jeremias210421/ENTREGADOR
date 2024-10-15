@@ -1,0 +1,236 @@
+<html><head><base href="https://mundodainovacao.com/">
+<title>MUNDO DA INOVAÇÃO - Perfil do Usuário</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary-color: #FF8C00;
+    --secondary-color: #FFA500;
+    --text-color: #333;
+    --bg-color: #f9f9f9;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    text-align: center;
+  }
+  .profile-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 40px;
+  }
+  .sidebar {
+    flex: 1;
+    min-width: 250px;
+  }
+  .main-content {
+    flex: 3;
+    min-width: 300px;
+  }
+  .profile-picture {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px;
+    border: 5px solid var(--primary-color);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  .profile-picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .user-info {
+    text-align: center;
+  }
+  .user-name {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .user-email {
+    color: #666;
+    margin-bottom: 20px;
+  }
+  .menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  .menu li {
+    margin-bottom: 10px;
+  }
+  .menu a {
+    display: block;
+    padding: 10px 15px;
+    background-color: #fff;
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  .menu a:hover, .menu a.active {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  .card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  .card h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  .form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(255,140,0,0.2);
+  }
+  .btn {
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>MUNDO DA INOVAÇÃO</h1>
+    </div>
+  </header>
+
+  <div class="container profile-container">
+    <aside class="sidebar">
+      <div class="profile-picture">
+        <img src="https://mundodainovacao.com/assets/default-avatar.jpg" alt="Foto de perfil">
+      </div>
+      <div class="user-info">
+        <div class="user-name">João da Silva</div>
+        <div class="user-email">joao.silva@email.com</div>
+      </div>
+      <nav>
+        <ul class="menu">
+          <li><a href="#" class="active">Editar Perfil</a></li>
+          <li><a href="https://mundodainovacao.com/user/projects">Meus Projetos</a></li>
+          <li><a href="https://mundodainovacao.com/user/notifications">Notificações</a></li>
+          <li><a href="https://mundodainovacao.com/user/settings">Configurações</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="card">
+        <h2>Editar Perfil</h2>
+        <form id="profile-form">
+          <div class="form-group">
+            <label for="name">Nome Completo</label>
+            <input type="text" id="name" name="name" value="João da Silva" required>
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" value="joao.silva@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Telefone</label>
+            <input type="tel" id="phone" name="phone" value="(11) 98765-4321">
+          </div>
+          <div class="form-group">
+            <label for="bio">Biografia</label>
+            <textarea id="bio" name="bio" rows="4">Entusiasta da inovação, sempre em busca de novas ideias e soluções criativas.</textarea>
+          </div>
+          <div class="form-group">
+            <label for="skills">Habilidades (separadas por vírgula)</label>
+            <input type="text" id="skills" name="skills" value="Inovação, Criatividade, Resolução de problemas">
+          </div>
+          <button type="submit" class="btn">Salvar Alterações</button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.getElementById('profile-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Aqui você adicionaria a lógica para enviar os dados do formulário para o servidor
+      alert('Perfil atualizado com sucesso!');
+    });
+
+    // Função para carregar a imagem do perfil
+    function loadProfilePicture(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+          document.querySelector('.profile-picture img').src = e.target.result;
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // Adicionar funcionalidade para trocar a foto de perfil
+    const profilePicture = document.querySelector('.profile-picture');
+    profilePicture.addEventListener('click', function() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = function() {
+        loadProfilePicture(this);
+      }
+      input.click();
+    });
+
+    profilePicture.style.cursor = 'pointer';
+    profilePicture.title = 'Clique para alterar a foto de perfil';
+  </script>
+</body></html>
