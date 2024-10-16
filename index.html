@@ -1,0 +1,236 @@
+<html><head><base href="https://websim.app/map?orderId=4945">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeliveryPro: Mapa de Entrega</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    height: 100%;
+  }
+  .app-container {
+    max-width: 414px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+  }
+  header {
+    background-color: #FF5722;
+    color: white;
+    padding: 15px;
+    text-align: center;
+  }
+  h1 {
+    margin: 0;
+    font-size: 20px;
+  }
+  #map {
+    flex-grow: 1;
+    width: 100%;
+    background-color: #e5e3df;
+  }
+  .delivery-info {
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+  }
+  .delivery-info h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #FF5722;
+  }
+  .delivery-info p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #333;
+  }
+  .status-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+  }
+  .btn {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px;
+  }
+  .btn-primary {
+    background-color: #4CAF50;
+    color: white;
+  }
+  .btn-primary:hover {
+    background-color: #45a049;
+  }
+  .btn-secondary {
+    background-color: #2196F3;
+    color: white;
+  }
+  .btn-secondary:hover {
+    background-color: #1e88e5;
+  }
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f8f8f8;
+    padding: 10px 0;
+    border-top: 1px solid #e0e0e0;
+  }
+  .nav-item {
+    text-align: center;
+    color: #333;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  .nav-item svg {
+    display: block;
+    margin: 0 auto 5px;
+    width: 24px;
+    height: 24px;
+  }
+  .nav-item.active {
+    color: #FF5722;
+  }
+  .nav-item.active svg {
+    fill: #FF5722;
+  }
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>Mapa de Entrega</h1>
+    </header>
+    <div id="map"></div>
+    <div class="delivery-info">
+      <h2>Pedido #4945</h2>
+      <p><strong>Restaurante:</strong> Pizzaria Bella Napoli</p>
+      <p><strong>EndereÃ§o de Retirada:</strong> Rua Augusta, 1500 - ConsolaÃ§Ã£o, SÃ£o Paulo - SP</p>
+      <p><strong>EndereÃ§o de Entrega:</strong> Av. Paulista, 1000 - Bela Vista, SÃ£o Paulo - SP</p>
+      <div class="status-buttons">
+        <button id="statusBtn" class="btn btn-primary" onclick="updateStatus()">Iniciar Entrega</button>
+        <button id="navRestaurantBtn" class="btn btn-secondary" onclick="openNavigation('restaurant')">Navegar para Restaurante</button>
+        <button id="navDeliveryBtn" class="btn btn-secondary" onclick="openNavigation('delivery')" style="display: none;">Navegar para Entrega</button>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <a href="https://websim.app/deliveries" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        Entregas
+      </a>
+      <a href="https://websim.app/map" class="nav-item active">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+        Mapa
+      </a>
+      <a href="https://websim.app/history" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+        </svg>
+        HistÃ³rico
+      </a>
+      <a href="https://websim.app/profile" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        Perfil
+      </a>
+    </nav>
+  </div>
+
+  <script>
+    let map;
+    let directionsService;
+    let directionsRenderer;
+    let currentStatus = 'initial';
+    const statusBtn = document.getElementById('statusBtn');
+    const navRestaurantBtn = document.getElementById('navRestaurantBtn');
+    const navDeliveryBtn = document.getElementById('navDeliveryBtn');
+    const restaurantLocation = { lat: -23.556680, lng: -46.661359 }; // Rua Augusta, 1500
+    const deliveryLocation = { lat: -23.561430, lng: -46.655914 }; // Av. Paulista, 1000
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -23.559055, lng: -46.658636 },
+        zoom: 14
+      });
+
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+
+      const restaurantMarker = new google.maps.Marker({
+        position: restaurantLocation,
+        map: map,
+        title: 'Pizzaria Bella Napoli',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+      });
+
+      const deliveryMarker = new google.maps.Marker({
+        position: deliveryLocation,
+        map: map,
+        title: 'Local de Entrega',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+      });
+
+      calculateAndDisplayRoute();
+    }
+
+    function calculateAndDisplayRoute() {
+      directionsService.route(
+        {
+          origin: restaurantLocation,
+          destination: deliveryLocation,
+          travelMode: google.maps.TravelMode.DRIVING,
+        },
+        (response, status) => {
+          if (status === "OK") {
+            directionsRenderer.setDirections(response);
+          } else {
+            window.alert("Falha ao calcular a rota: " + status);
+          }
+        }
+      );
+    }
+
+    function updateStatus() {
+      switch (currentStatus) {
+        case 'initial':
+          currentStatus = 'picking';
+          statusBtn.textContent = 'Cheguei ao Restaurante';
+          break;
+        case 'picking':
+          currentStatus = 'delivering';
+          statusBtn.textContent = 'Entregar Pedido';
+          navRestaurantBtn.style.display = 'none';
+          navDeliveryBtn.style.display = 'block';
+          break;
+        case 'delivering':
+          currentStatus = 'completed';
+          statusBtn.textContent = 'Entrega ConcluÃ­da';
+          statusBtn.disabled = true;
+          navDeliveryBtn.style.display = 'none';
+          break;
+      }
+    }
+
+    function openNavigation(destination) {
+      const location = destination === 'restaurant' ? restaurantLocation : deliveryLocation;
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}&travelmode=driving`;
+      window.open(url, '_blank');
+    }
+
+    window.onload = initMap;
+  </script>
+</body></html>
