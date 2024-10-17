@@ -1,0 +1,274 @@
+<html><head><base href="https://websim.app/deliveries">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeliveryPro: Aguardando Pedidos</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    height: 100%;
+  }
+  .app-container {
+    max-width: 414px;
+    margin: 0 auto;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  header {
+    background-color: #FF5722;
+    color: white;
+    padding: 15px;
+    text-align: center;
+  }
+  h1 {
+    margin: 0;
+    font-size: 20px;
+  }
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .waiting-animation {
+    width: 100px;
+    height: 100px;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #FF5722;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .waiting-text {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+  }
+  .notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: none;
+    z-index: 1000;
+    width: 90%;
+    max-width: 380px;
+  }
+  .btn {
+    border: none;
+    color: white;
+    padding: 12px 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 48%;
+    font-weight: bold;
+  }
+  .accept-btn {
+    background-color: #4CAF50;
+  }
+  .reject-btn {
+    background-color: #f44336;
+  }
+  #map {
+    width: 100%;
+    height: 300px;
+    margin-top: 20px;
+  }
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f8f8f8;
+    padding: 10px 0;
+    border-top: 1px solid #e0e0e0;
+  }
+  .nav-item {
+    text-align: center;
+    color: #333;
+    text-decoration: none;
+    font-size: 12px;
+  }
+  .nav-item svg {
+    display: block;
+    margin: 0 auto 5px;
+    width: 24px;
+    height: 24px;
+  }
+  .nav-item.active {
+    color: #FF5722;
+  }
+  .nav-item.active svg {
+    fill: #FF5722;
+  }
+  .order-details {
+    text-align: left;
+    margin-bottom: 15px;
+  }
+  .order-details h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #FF5722;
+  }
+  .order-details p {
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  .delivery-fee {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4CAF50;
+    margin: 15px 0;
+    text-align: center;
+  }
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>Aguardando Pedidos</h1>
+    </header>
+    <div class="content">
+      <div class="waiting-animation"></div>
+      <p class="waiting-text">Buscando pedidos prÃ³ximos a vocÃª...</p>
+    </div>
+    <div id="map" style="display: none;"></div>
+    <nav class="bottom-nav">
+      <a href="https://websim.app/deliveries" class="nav-item active">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        Entregas
+      </a>
+      <a href="https://websim.app/map" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+        </svg>
+        Mapa
+      </a>
+      <a href="https://websim.app/profile" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        Perfil
+      </a>
+    </nav>
+  </div>
+
+  <div class="notification" id="notification">
+    <div class="order-details">
+      <h2>Novo Pedido #1234</h2>
+      <p><strong>Estabelecimento:</strong> Restaurante Sabor Paulista</p>
+      <p><strong>EndereÃ§o de retirada:</strong> Rua Augusta, 1500 - ConsolaÃ§Ã£o, SÃ£o Paulo - SP</p>
+      <p><strong>EndereÃ§o de entrega:</strong> Av. Paulista, 1000 - Bela Vista, SÃ£o Paulo - SP</p>
+    </div>
+    <div class="delivery-fee">
+      Taxa de Entrega: R$ 12,50
+    </div>
+    <div class="button-container">
+      <button class="btn accept-btn" onclick="acceptOrder()">Aceitar</button>
+      <button class="btn reject-btn" onclick="rejectOrder()">Recusar</button>
+    </div>
+  </div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+<script>
+let map;
+let directionsService;
+let directionsRenderer;
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: -23.550520, lng: -46.633309 },
+    zoom: 13,
+  });
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsRenderer.setMap(map);
+}
+
+function showNotification() {
+  const notification = document.getElementById('notification');
+  notification.style.display = 'block';
+  // Vibrate for 200ms
+  if ("vibrate" in navigator) {
+    navigator.vibrate(200);
+  }
+}
+
+function acceptOrder() {
+  document.getElementById('notification').style.display = 'none';
+  document.querySelector('.content').style.display = 'none';
+  document.getElementById('map').style.display = 'block';
+  initMap();
+  calculateAndDisplayRoute();
+}
+
+function rejectOrder() {
+  document.getElementById('notification').style.display = 'none';
+  // Optionally, you could add some feedback here, like a toast message
+  // saying "Pedido recusado" or "Aguardando prÃ³ximo pedido"
+}
+
+function calculateAndDisplayRoute() {
+  const restaurantLocation = { lat: -23.557819, lng: -46.639308 }; // Rua Augusta, 1500
+  const customerLocation = { lat: -23.561414, lng: -46.656453 }; // Av. Paulista, 1000
+
+  // First, route to the restaurant
+  directionsService.route(
+    {
+      origin: map.getCenter(),
+      destination: restaurantLocation,
+      travelMode: google.maps.TravelMode.DRIVING,
+    },
+    (response, status) => {
+      if (status === "OK") {
+        directionsRenderer.setDirections(response);
+        // After 10 seconds, show route to customer
+        setTimeout(() => {
+          directionsService.route(
+            {
+              origin: restaurantLocation,
+              destination: customerLocation,
+              travelMode: google.maps.TravelMode.DRIVING,
+            },
+            (response, status) => {
+              if (status === "OK") {
+                directionsRenderer.setDirections(response);
+              }
+            }
+          );
+        }, 10000);
+      }
+    }
+  );
+}
+
+// Simulate incoming order after 5-10 seconds
+setTimeout(showNotification, Math.random() * 5000 + 5000);
+</script>
+
+</body></html>
