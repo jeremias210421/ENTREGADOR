@@ -125,6 +125,15 @@
     margin-bottom: 20px;
   }
 
+  .warning-message {
+    color: var(--warning-color);
+    background-color: #fff9e6;
+    border: 1px solid var(--warning-color);
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
   .success-message {
     color: var(--success-color);
     background-color: #e6fff2;
@@ -158,6 +167,23 @@
     font-size: 14px;
     margin-top: 5px;
   }
+
+  .demo-credentials {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  .demo-credentials h4 {
+    margin-top: 0;
+    color: #1890ff;
+  }
+
+  .demo-credentials p {
+    margin: 5px 0;
+  }
 </style>
 </head>
 <body>
@@ -167,15 +193,22 @@
 const { useState, useEffect } = React;
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
-    fetchAppointments();
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+      fetchAppointments(token);
+    }
   }, []);
 
-  const fetchAppointments = async () => {
+  const fetchAppointments = async (token) => {
     try {
-      const response = await axios.get('/api/appointments');
+      const response = await axios.get('/api/appointments', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setAppointments(response.data);
     } catch (error) {
       console.error('Error fetching appointments:', error);
@@ -188,9 +221,81 @@ function App() {
         <h1>MUNDO DA INOVAÃ‡ÃƒO - Gerenciador de Fluxo de Atendimento</h1>
       </header>
       <main className="main-content">
-        <Dashboard appointments={appointments} setAppointments={setAppointments} />
+        {!isLoggedIn ? (
+          <LoginForm setIsLoggedIn={setIsLoggedIn} />
+        ) : (
+          <Dashboard appointments={appointments} setAppointments={setAppointments} />
+        )}
       </main>
     </div>
+  );
+}
+
+function LoginForm({ setIsLoggedIn }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+    try {
+      const response = await axios.post('/api/login', { email, password });
+      if (response.data && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        setIsLoggedIn(true);
+      } else {
+        throw new Error('Token nÃ£o recebido do servidor');
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+      if (error.response) {
+        setError(`Falha no login: ${error.response.data.message || 'Verifique suas credenciais.'}`);
+      } else if (error.request) {
+        setError('NÃ£o foi possÃ­vel conectar ao servidor. Por favor, tente novamente mais tarde.');
+      } else {
+        setError('Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="demo-credentials">
+        <h4>Credenciais de DemonstraÃ§Ã£o</h4>
+        <p><strong>Email:</strong> jeremias210421@gmail.com</p>
+        <p><strong>Senha:</strong> 12345678</p>
+      </div>
+      {error && <div className="error-message">{error}</div>}
+      <div className="form-group">
+        <label htmlFor="email">E-mail:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="password">Senha:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? 'Entrando...' : 'Login'}
+        {isLoading && <div className="loading"></div>}
+      </button>
+    </form>
   );
 }
 
@@ -255,8 +360,10 @@ function NewAppointmentForm({ setAppointments }) {
     }
     setIsLoading(true);
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.post('/api/appointments', 
-        { clientName, clientPhone, date }
+        { clientName, clientPhone, date },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setSuccess('Agendamento criado com sucesso!');
       setClientName('');
