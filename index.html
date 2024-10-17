@@ -1,314 +1,324 @@
 <html><head><base href="https://api.mundodainovacao.com/">
-<title>MUNDO DA INOVAÇÃO - Chat Inteligente</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.20.15/babel.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>MUNDO DA INOVAÃ‡ÃƒO - Gerenciador de Fluxo de Atendimento</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/babel-standalone@6.26.0/babel.min.js"></script>
 <style>
   :root {
-    --primary-color: #3498db;
-    --secondary-color: #2ecc71;
-    --background-color: #f0f3f5;
-    --text-color: #34495e;
-    --message-bg-user: #e8f5fd;
-    --message-bg-ai: #f0fff4;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    --primary-color: #4a90e2;
+    --secondary-color: #50c878;
+    --background-color: #f5f7fa;
+    --text-color: #333333;
+    --border-color: #d1d8e0;
+    --error-color: #ff6b6b;
+    --warning-color: #ffa502;
+    --success-color: #20bf6b;
   }
-  body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--background-color);
+
+  body, html {
     margin: 0;
     padding: 0;
-    display: flex;
-    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
     color: var(--text-color);
   }
-  #root {
-    display: flex;
-    width: 100%;
-    height: 100%;
-  }
-  .chat-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 1000px;
+
+  #app {
+    max-width: 1200px;
     margin: 0 auto;
-    height: 100%;
-    background-color: #ffffff;
-    box-shadow: 0 0 30px var(--shadow-color);
-    border-radius: 10px;
-    overflow: hidden;
+    padding: 20px;
   }
-  .chat-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+
+  .header {
+    background-color: var(--primary-color);
     color: white;
-    padding: 20px 30px;
-    font-size: 24px;
-    font-weight: 700;
-    box-shadow: 0 2px 10px var(--shadow-color);
-    display: flex;
-    align-items: center;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
   }
-  .chat-header img {
-    width: 40px;
-    height: 40px;
-    margin-right: 15px;
+
+  .main-content {
+    background-color: white;
+    border-radius: 0 0 8px 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   }
-  .chat-messages {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-  }
-  .message {
-    margin-bottom: 25px;
-    line-height: 1.6;
-    font-size: 16px;
-    max-width: 80%;
-    padding: 15px 20px;
-    border-radius: 20px;
-    box-shadow: 0 2px 5px var(--shadow-color);
-    animation: fadeIn 0.5s ease-out;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .user-message {
-    align-self: flex-end;
-    background-color: var(--message-bg-user);
-    color: var(--text-color);
-    border-bottom-right-radius: 5px;
-  }
-  .gpt-message {
-    align-self: flex-start;
-    background-color: var(--message-bg-ai);
-    color: var(--text-color);
-    border-bottom-left-radius: 5px;
-  }
-  .input-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 25px;
-    background-color: #ffffff;
-    border-top: 1px solid #e5e5e5;
-  }
-  .user-input-wrapper {
-    display: flex;
-    width: 100%;
-    max-width: 800px;
-    margin-bottom: 15px;
-  }
-  .user-input {
-    flex-grow: 1;
-    padding: 15px 20px;
-    border: 2px solid var(--primary-color);
-    border-radius: 25px;
-    font-size: 16px;
-    box-shadow: 0 2px 5px var(--shadow-color);
-    transition: all 0.3s ease;
-  }
-  .user-input:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
-  }
-  .send-button {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    margin-left: 15px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px var(--shadow-color);
-  }
-  .send-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px var(--shadow-color);
-  }
-  .settings-panel {
-    width: 300px;
-    padding: 25px;
-    background-color: #ffffff;
-    overflow-y: auto;
-    border-left: 1px solid #e5e5e5;
-    box-shadow: -2px 0 10px var(--shadow-color);
-  }
-  .settings-panel h3 {
-    margin-top: 0;
-    color: var(--primary-color);
-    font-weight: 700;
-    font-size: 20px;
+
+  .form-group {
     margin-bottom: 20px;
   }
-  .setting {
-    margin-bottom: 30px;
-  }
-  .setting label {
+
+  label {
     display: block;
-    margin-bottom: 10px;
-    color: var(--text-color);
-    font-weight: 600;
-    font-size: 14px;
-  }
-  .setting input[type="range"] {
-    width: 100%;
-    -webkit-appearance: none;
-    height: 8px;
-    border-radius: 4px;
-    background: #d1d5db;
-    outline: none;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-  }
-  .setting input[type="range"]:hover {
-    opacity: 1;
-  }
-  .setting input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--primary-color);
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-  }
-  .setting input[type="range"]::-webkit-slider-thumb:hover {
-    background: var(--secondary-color);
-    box-shadow: 0 0 0 6px rgba(52, 152, 219, 0.2);
-  }
-  .setting-value {
-    font-size: 14px;
-    color: var(--text-color);
-    margin-top: 6px;
+    margin-bottom: 5px;
     font-weight: 500;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input[type="datetime-local"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #45b069;
+  }
+
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .dashboard-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .dashboard-card h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+  }
+
+  .appointment-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .appointment-list li {
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 0;
+  }
+
+  .appointment-list li:last-child {
+    border-bottom: none;
+  }
+
+  .error-message {
+    color: var(--error-color);
+    background-color: #fff0f0;
+    border: 1px solid var(--error-color);
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  .success-message {
+    color: var(--success-color);
+    background-color: #e6fff2;
+    border: 1px solid var(--success-color);
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  .loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    margin-left: 10px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .input-error {
+    border-color: var(--error-color);
+  }
+
+  .error-text {
+    color: var(--error-color);
+    font-size: 14px;
+    margin-top: 5px;
   }
 </style>
 </head>
 <body>
-<div id="root"></div>
+<div id="app"></div>
 
 <script type="text/babel">
-const { useState, useEffect, useRef } = React;
+const { useState, useEffect } = React;
 
-function ChatApp() {
-  const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [settings, setSettings] = useState({
-    temperatura: 0.7,
-    tokensMaximos: 150,
-    topP: 1,
-    penalidadeFrequencia: 0,
-    penalidadePresenca: 0
-  });
+function App() {
+  const [appointments, setAppointments] = useState([]);
 
-  const messagesEndRef = useRef(null);
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(scrollToBottom, [messages]);
-
-  const handleInputChange = (e) => {
-    setInputMessage(e.target.value);
-  };
-
-  const handleSettingChange = (setting, value) => {
-    setSettings(prevSettings => ({
-      ...prevSettings,
-      [setting]: value
-    }));
-  };
-
-  const sendMessage = async () => {
-    if (inputMessage.trim()) {
-      const newMessages = [...messages, { text: inputMessage, sender: 'user' }];
-      setMessages(newMessages);
-      setInputMessage('');
-
-      try {
-        const response = await fetch('api/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            message: inputMessage,
-            ...settings
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Resposta da rede nÃ£o foi bem-sucedida');
-        }
-
-        const data = await response.json();
-        setMessages([...newMessages, { text: data.response, sender: 'gpt' }]);
-      } catch (error) {
-        console.error('Erro:', error);
-        setMessages([...newMessages, { text: 'Desculpe, ocorreu um erro ao processar sua solicitaÃ§Ã£o.', sender: 'gpt' }]);
-      }
+  const fetchAppointments = async () => {
+    try {
+      const response = await axios.get('/api/appointments');
+      setAppointments(response.data);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
     }
   };
 
   return (
-    <>
-      <div className="chat-container">
-        <div className="chat-header">
-          <img src="https://api.mundodainovacao.com/logo.svg" alt="Logo Mundo da InovaÃ§Ã£o" />
-          MUNDO DA INOVAÃ‡ÃƒO
-        </div>
-        <div className="chat-messages">
-          {messages.map((message, index) => (
-            <div key={index} className={`message ${message.sender}-message`}>
-              {message.text}
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-        <div className="input-container">
-          <div className="user-input-wrapper">
-            <input
-              type="text"
-              value={inputMessage}
-              onChange={handleInputChange}
-              onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Digite sua mensagem aqui..."
-              className="user-input"
-            />
-            <button onClick={sendMessage} className="send-button">Enviar</button>
-          </div>
-        </div>
-      </div>
-      <div className="settings-panel">
-        <h3>ConfiguraÃ§Ãµes de IA</h3>
-        {Object.entries(settings).map(([key, value]) => (
-          <div className="setting" key={key}>
-            <label>{key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}</label>
-            <input 
-              type="range" 
-              min={key === 'tokensMaximos' ? 1 : 0}
-              max={key === 'tokensMaximos' ? 500 : (key === 'temperatura' || key === 'topP' ? 1 : 2)}
-              step={key === 'tokensMaximos' ? 1 : 0.1}
-              value={value}
-              onChange={(e) => handleSettingChange(key, parseFloat(e.target.value))}
-            />
-            <div className="setting-value">{value.toFixed(2)}</div>
-          </div>
-        ))}
-      </div>
-    </>
+    <div>
+      <header className="header">
+        <h1>MUNDO DA INOVAÃ‡ÃƒO - Gerenciador de Fluxo de Atendimento</h1>
+      </header>
+      <main className="main-content">
+        <Dashboard appointments={appointments} setAppointments={setAppointments} />
+      </main>
+    </div>
   );
 }
 
-ReactDOM.render(<ChatApp />, document.getElementById('root'));
+function Dashboard({ appointments, setAppointments }) {
+  return (
+    <div className="dashboard">
+      <div className="dashboard-card">
+        <h3>Agendamentos Recentes</h3>
+        <ul className="appointment-list">
+          {appointments.map((appointment, index) => (
+            <li key={index}>
+              {appointment.clientName} - {new Date(appointment.date).toLocaleString()}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="dashboard-card">
+        <h3>Novo Agendamento</h3>
+        <NewAppointmentForm setAppointments={setAppointments} />
+      </div>
+    </div>
+  );
+}
+
+function NewAppointmentForm({ setAppointments }) {
+  const [clientName, setClientName] = useState('');
+  const [clientPhone, setClientPhone] = useState('');
+  const [date, setDate] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+
+  const validateForm = () => {
+    const errors = {};
+    if (clientName.length < 3) {
+      errors.clientName = 'O nome do cliente deve ter pelo menos 3 caracteres';
+    }
+    if (!/^\d{10,11}$/.test(clientPhone)) {
+      errors.clientPhone = 'O telefone deve conter 10 ou 11 dÃ­gitos numÃ©ricos';
+    }
+    if (!date) {
+      errors.date = 'A data e hora sÃ£o obrigatÃ³rias';
+    } else {
+      const selectedDate = new Date(date);
+      const now = new Date();
+      if (selectedDate <= now) {
+        errors.date = 'A data e hora devem ser futuras';
+      }
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    if (!validateForm()) {
+      setError('Por favor, corrija os erros no formulÃ¡rio antes de enviar.');
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const response = await axios.post('/api/appointments', 
+        { clientName, clientPhone, date }
+      );
+      setSuccess('Agendamento criado com sucesso!');
+      setClientName('');
+      setClientPhone('');
+      setDate('');
+      setAppointments(prevAppointments => [...prevAppointments, response.data]);
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      setError('Erro ao criar agendamento. Por favor, verifique os dados e tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
+      <div className="form-group">
+        <label htmlFor="clientName">Nome do Cliente:</label>
+        <input
+          type="text"
+          id="clientName"
+          value={clientName}
+          onChange={(e) => setClientName(e.target.value)}
+          className={validationErrors.clientName ? 'input-error' : ''}
+          required
+        />
+        {validationErrors.clientName && <div className="error-text">{validationErrors.clientName}</div>}
+      </div>
+      <div className="form-group">
+        <label htmlFor="clientPhone">Telefone do Cliente:</label>
+        <input
+          type="text"
+          id="clientPhone"
+          value={clientPhone}
+          onChange={(e) => setClientPhone(e.target.value)}
+          className={validationErrors.clientPhone ? 'input-error' : ''}
+          required
+        />
+        {validationErrors.clientPhone && <div className="error-text">{validationErrors.clientPhone}</div>}
+      </div>
+      <div className="form-group">
+        <label htmlFor="date">Data e Hora:</label>
+        <input
+          type="datetime-local"
+          id="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className={validationErrors.date ? 'input-error' : ''}
+          required
+        />
+        {validationErrors.date && <div className="error-text">{validationErrors.date}</div>}
+      </div>
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? 'Criando...' : 'Criar Agendamento'}
+        {isLoading && <div className="loading"></div>}
+      </button>
+    </form>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById('app'));
 </script>
 </body></html>
