@@ -681,21 +681,7 @@ function LoginRegister({ onLogin }) {
                 required
               />
             </>
-          )}
-          <button type="submit" className="neon-button">
-            {isLogin ? 'Entrar' : 'Cadastrar'}
-          </button>
-        </form>
-        <p>
-          {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
-          <span className="toggle-form" onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? 'Cadastre-se' : 'Faça login'}
-          </span>
-        </p>
-      </div>
-    </div>
-  );
-}
+
 
 function DishDetails({ dish, onClose, onAddToCart }) {
   const [selectedIngredients, setSelectedIngredients] = useState(dish.ingredients || []);
