@@ -1,1067 +1,442 @@
-<html><head><base href="https://mundodainovacao.com/app-delivery-futurista/">
-<title>MUNDO DA INOVAÇÃO - App de Delivery Futurista</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.20.15/babel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<style>
-  :root {
-    --neon-blue: #00ffff;
-    --neon-pink: #ff00ff;
-    --dark-bg: #0f0f1f;
-    --light-text: #ffffff;
-  }
-  
-  body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: var(--dark-bg);
-    color: var(--light-text);
-    overflow-x: hidden;
-  }
-  
-  #root {
-    max-width: 100%;
-    margin: 0 auto;
-    min-height: 100vh;
-  }
-
-  .login-register-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: var(--dark-bg);
-  }
-
-  .login-register-form {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .login-register-form h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-
-  .login-register-form input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 1rem;
-    border: none;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.2);
-    color: var(--light-text);
-  }
-
-  .login-register-form input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  .neon-button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-    color: var(--light-text);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .neon-button:hover {
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-  }
-
-  .toggle-form {
-    color: var(--neon-blue);
-    cursor: pointer;
-    margin-left: 5px;
-  }
-
-  .toggle-form:hover {
-    text-decoration: underline;
-  }
-  
-  .header {
-    background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-    color: var(--light-text);
-    padding: 20px;
-    text-align: center;
-    font-family: 'Orbitron', sans-serif;
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  @keyframes logoEntrance {
-    0% { opacity: 0; transform: translateY(-50px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-
-  .header h1 {
-    animation: logoEntrance 1.5s ease-out, neonGlow 1.5s ease-in-out infinite alternate;
-  }
-  
-  .nav-menu {
-    display: flex;
-    justify-content: space-around;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 10px 0;
-    backdrop-filter: blur(10px);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  .nav-item {
-    cursor: pointer;
-    padding: 10px 15px;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    font-family: 'Orbitron', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
-    animation: neonPulse 2s infinite;
-  }
-  
-  @keyframes neonPulse {
-    0% { box-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue); }
-    50% { box-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-blue); }
-    100% { box-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue); }
-  }
-
-  .nav-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent
-    );
-    transition: 0.5s;
-  }
-  
-  .nav-item:hover::before {
-    left: 100%;
-  }
-  
-  .nav-item:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 15px var(--neon-blue);
-    transform: translateY(-3px);
-  }
-  
-  .content {
-    padding: 20px;
-    transition: all 0.5s ease;
-  }
-  
-  .dish-card {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .dish-card:hover {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 15px 30px rgba(0, 255, 255, 0.4);
-  }
-  
-  .dish-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-    transition: all 0.5s;
-  }
-  
-  .dish-card:hover .dish-image {
-    transform: scale(1.1);
-  }
-  
-  .dish-title {
-    font-size: 1.5em;
-    margin-top: 10px;
-    font-family: 'Orbitron', sans-serif;
-    color: var(--neon-blue);
-  }
-  
-  .dish-description {
-    font-size: 0.9em;
-    color: #cccccc;
-  }
-  
-  .dish-price {
-    font-size: 1.2em;
-    color: var(--neon-pink);
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  
-  .order-button {
-    background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-    border: none;
-    padding: 10px 20px;
-    color: var(--light-text);
-    border-radius: 25px;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 10px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .order-button::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.3) 0%,
-      transparent 70%
-    );
-    transform: scale(0);
-    transition: transform 0.5s, opacity 0.5s;
-    opacity: 0;
-  }
-
-  .order-button:hover::after {
-    transform: scale(1);
-    opacity: 1;
-  }
-
-  .order-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-  }
-  
-  #dish-gallery {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    padding: 20px 0;
-  }
-  
-  .dish-card {
-    flex: 0 0 auto;
-    width: 300px;
-    margin-right: 20px;
-    scroll-snap-align: start;
-  }
-  
-  #map-container {
-    height: 300px;
-    width: 100%;
-    background-color: #1a1a2e;
-    border-radius: 15px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-  }
-  
-  .delivery-marker {
-    width: 20px;
-    height: 20px;
-    background-color: var(--neon-pink);
-    border-radius: 50%;
-    position: absolute;
-    transition: all 0.5s ease;
-    box-shadow: 0 0 10px var(--neon-pink);
-  }
-  
-  .recommendation {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 15px;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .recommendation:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateX(5px);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-  }
-  
-  @keyframes neonGlow {
-    0% {
-      text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff, 0 0 20px #ff00ff;
+<html>
+<head>
+  <base href="https://websim.app/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gerenciador de Pedidos e NotificaÃ§Ãµes com ImpressÃ£o Direta</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
     }
-    100% {
-      text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff, 0 0 40px #00ffff;
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
     }
-  }
-  
-  .neon-text {
-    animation: neonGlow 1.5s ease-in-out infinite alternate;
-    color: var(--light-text);
-  }
-  
-  .category-selector {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .category-button {
-    background: transparent;
-    border: 2px solid var(--neon-blue);
-    color: var(--neon-blue);
-    padding: 10px 20px;
-    margin: 0 10px;
-    border-radius: 25px;
-    font-family: 'Orbitron', sans-serif;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .category-button.active {
-    background: var(--neon-blue);
-    color: var(--dark-bg);
-  }
-  
-  .category-button:hover {
-    box-shadow: 0 0 15px var(--neon-blue);
-    transform: translateY(-3px);
-  }
-  
-  .customization-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal-content {
-    background: var(--dark-bg);
-    padding: 30px;
-    border-radius: 15px;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 0 30px var(--neon-blue);
-    animation: slideIn 0.5s;
-  }
-
-  @keyframes floatingParticles {
-    0% { transform: translateY(0) translateX(0); }
-    50% { transform: translateY(-10px) translateX(5px); }
-    100% { transform: translateY(0) translateX(0); }
-  }
-
-  .customization-option {
-    margin-bottom: 15px;
-  }
-  
-  .customization-option label {
-    display: block;
-    margin-bottom: 5px;
-    color: var(--neon-blue);
-  }
-  
-  .customization-option select,
-  .customization-option input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--neon-blue);
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--light-text);
-  }
-  
-  .close-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    color: var(--light-text);
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .profile-section {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .profile-section h3 {
-    color: var(--neon-blue);
-    margin-bottom: 15px;
-  }
-  
-  .profile-info {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .profile-info label {
-    margin-bottom: 5px;
-    color: var(--neon-pink);
-  }
-  
-  .profile-info input {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--neon-blue);
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--light-text);
-  }
-  
-  .save-profile {
-    background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-    border: none;
-    padding: 10px 20px;
-    color: var(--light-text);
-    border-radius: 25px;
-    font-family: 'Orbitron', sans-serif;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    animation: neonPulse 2s infinite;
-  }
-  
-  .save-profile:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-  }
-  
-  .dish-details-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  .dish-details-content {
-    background: var(--dark-bg);
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 80%;
-    max-height: 80%;
-    overflow-y: auto;
-    box-shadow: 0 0 20px var(--neon-blue);
-  }
-
-  .dish-3d-container {
-    width: 100%;
-    height: 300px;
-    position: relative;
-  }
-
-  .controls {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-  }
-
-  .ingredients-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
-  }
-
-  .ingredients-list button {
-    padding: 5px 10px;
-    border: 1px solid var(--neon-blue);
-    background: transparent;
-    color: var(--light-text);
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .ingredients-list button.selected {
-    background: var(--neon-blue);
-    color: var(--dark-bg);
-  }
-
-  .add-to-cart-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue));
-    border: none;
-    color: var(--light-text);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .add-to-cart-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-  }
-
-  .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    color: var(--light-text);
-    font-size: 24px;
-    cursor: pointer;
-  }
-
-  @keyframes addToCartAnimation {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
-
-  .add-to-cart-button.animating {
-    animation: addToCartAnimation 0.5s ease-in-out;
-  }
-
-</style>
+    
+    h1, h2, h3 {
+      font-weight: 700;
+      color: #2c3e50;
+    }
+    
+    h1 {
+      font-size: 2.5em;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    h2 {
+      font-size: 1.8em;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+    }
+    
+    #novos-pedidos, #pedidos-aceitos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .pedido {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .pedido:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .pedido h3 {
+      margin-top: 0;
+      color: #3498db;
+      font-size: 1.4em;
+    }
+    
+    p {
+      margin: 10px 0;
+    }
+    
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    
+    button {
+      background-color: #3498db;
+      color: #ffffff;
+      border: none;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s, transform 0.1s;
+      margin-right: 5px;
+      margin-top: 10px;
+    }
+    
+    button:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+    }
+    
+    .aceitar-button { background-color: #2ecc71; }
+    .aceitar-button:hover { background-color: #27ae60; }
+    
+    .recusar-button { background-color: #e74c3c; }
+    .recusar-button:hover { background-color: #c0392b; }
+    
+    .edit-button { background-color: #f39c12; }
+    .edit-button:hover { background-color: #d35400; }
+    
+    .save-button { background-color: #1abc9c; }
+    .save-button:hover { background-color: #16a085; }
+    
+    .print-button { background-color: #34495e; }
+    .print-button:hover { background-color: #2c3e50; }
+    
+    .categoria {
+      background-color: #ecf0f1;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .categoria h3 {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+  </style>
 </head>
 <body>
-<div id="particles-js" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
-<div id="root"></div>
-
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
-
-function ParticleBackground() {
-  useEffect(() => {
-    const particlesJS = window.particlesJS;
-    particlesJS('particles-js', {
-      particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
-        color: { value: "#00ffff" },
-        shape: { type: "circle" },
-        opacity: { value: 0.5, random: true },
-        size: { value: 3, random: true },
-        move: {
-          enable: true,
-          speed: 1,
-          direction: "none",
-          random: true,
-          out_mode: "out"
-        }
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: {
-          onhover: { enable: true, mode: "repulse" },
-          onclick: { enable: true, mode: "push" }
-        },
-        modes: {
-          repulse: { distance: 100, duration: 0.4 },
-          push: { particles_nb: 4 }
-        }
-      }
-    });
-  }, []);
-
-  return <div id="particles-js" style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1}}></div>;
-}
-
-function LoginRegister({ onLogin }) {
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = isLogin
-        ? await fetch('http://localhost:3001/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          })
-        : await fetch('http://localhost:3001/api/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, name, address, phone }),
-          });
-      const data = await response.json();
-      if (data.success || data.id) {
-        onLogin();
-      } else {
-        console.error('Login/Register failed');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-
-  return (
-    <div className="login-register-container">
-      <div className="login-register-form">
-        <h2 className="neon-text">{isLogin ? 'Login' : 'Cadastro'}</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {!isLogin && (
-            <>
-              <input
-                type="text"
-                placeholder="Nome"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-              <input
-                type="text"
-                placeholder="Endereço"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                required
-              />
-              <input
-                type="tel"
-                placeholder="Telefone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-              />
-            </>
-          )}
-          <button type="submit" className="neon-button">
-            {isLogin ? 'Entrar' : 'Cadastrar'}
-          </button>
-        </form>
-        <p>
-          {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
-          <span className="toggle-form" onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? 'Cadastre-se' : 'Faça login'}
-          </span>
-        </p>
+  <div class="container">
+    <h1>Gerenciador de Pedidos e NotificaÃ§Ãµes</h1>
+    
+    <h2>Novos Pedidos</h2>
+    <div id="novos-pedidos"></div>
+    
+    <h2>Pedidos Aceitos</h2>
+    <div id="pedidos-aceitos">
+      <div class="categoria">
+        <h3>Pedidos em Andamento</h3>
+        <div id="pedidos-em-andamento"></div>
+      </div>
+      <div class="categoria">
+        <h3>Pedidos Entregues</h3>
+        <div id="pedidos-entregues"></div>
       </div>
     </div>
-  );
+  </div>
+
+  <audio id="notificationSound">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-alert-quick-chime-766.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+<script>
+const numeroBusiness = '55639992163936';
+
+let pedidosNovos = [
+  { id: 1, cliente: 'Cliente 1', telefone: '5563999887766', itens: 'Pizza de Calabresa', status: 'Pendente', descricao: 'Pizza grande, borda recheada com catupiry', endereco: 'Rua A, 123', formaPagamento: 'CartÃ£o de CrÃ©dito', valor: 50.00, taxaEntrega: 5.00 },
+  { id: 2, cliente: 'Cliente 2', telefone: '5563988776655', itens: 'HambÃºrguer Duplo', status: 'Pendente', descricao: 'Sem cebola, adicional de bacon', endereco: 'Avenida B, 456', formaPagamento: 'Dinheiro', valor: 35.00, taxaEntrega: 5.00 },
+];
+
+let pedidosAceitos = [];
+let proximoId = Math.max(
+  ...pedidosNovos.map(p => p.id),
+  ...pedidosAceitos.map(p => p.id),
+  0
+) + 1;
+
+function atualizarPedidos() {
+  pedidosNovos.sort((a, b) => a.id - b.id);
+  pedidosAceitos.sort((a, b) => a.id - b.id);
+  atualizarNovosPedidos();
+  atualizarPedidosAceitos();
 }
 
-function DishDetails({ dish, onClose, onAddToCart }) {
-  const [selectedIngredients, setSelectedIngredients] = useState(dish.ingredients || []);
-  const [isRotating, setIsRotating] = useState(false);
-  const [zoom, setZoom] = useState(1);
-  const canvasRef = useRef(null);
-  const audioRef = useRef(null);
+function atualizarNovosPedidos() {
+  const novosContainer = document.getElementById('novos-pedidos');
+  novosContainer.innerHTML = '';
 
-  useEffect(() => {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    const plateGeometry = new THREE.CylinderGeometry(5, 5, 0.5, 32);
-    const plateMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff });
-    const plate = new THREE.Mesh(plateGeometry, plateMaterial);
-    scene.add(plate);
-
-    const light = new THREE.PointLight(0xffffff, 1, 100);
-    light.position.set(0, 10, 10);
-    scene.add(light);
-
-    camera.position.z = 15;
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-      if (isRotating) {
-        plate.rotation.y += 0.01;
-      }
-      renderer.render(scene, camera);
-    };
-    animate();
-
-    return () => {
-      renderer.dispose();
-    };
-  }, [isRotating]);
-
-  const toggleIngredient = (ingredient) => {
-    setSelectedIngredients(prev => 
-      prev.includes(ingredient) 
-        ? prev.filter(i => i !== ingredient) 
-        : [...prev, ingredient]
-    );
-    playSound();
-    animateIngredient(ingredient);
-  };
-
-  const playSound = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
-    }
-  };
-
-  const animateIngredient = (ingredient) => {
-    console.log(`Animating ${ingredient}`);
-  };
-
-  const handleAddToCart = () => {
-    onAddToCart({ ...dish, selectedIngredients });
-  };
-
-  return (
-    <div className="dish-details-modal">
-      <div className="dish-details-content">
-        <h2>{dish.name}</h2>
-        <div className="dish-3d-container">
-          <canvas ref={canvasRef} />
-          <div className="controls">
-            <button onClick={() => setIsRotating(!isRotating)}>
-              {isRotating ? 'Stop Rotation' : 'Start Rotation'}
-            </button>
-            <input
-              type="range"
-              min="0.5"
-              max="2"
-              step="0.1"
-              value={zoom}
-              onChange={(e) => setZoom(parseFloat(e.target.value))}
-            />
-          </div>
-        </div>
-        <div className="ingredients-list">
-          {dish.ingredients.map(ingredient => (
-            <button
-              key={ingredient}
-              onClick={() => toggleIngredient(ingredient)}
-              className={selectedIngredients.includes(ingredient) ? 'selected' : ''}
-            >
-              {ingredient}
-            </button>
-          ))}
-        </div>
-        <button className="add-to-cart-button" onClick={handleAddToCart}>
-          Add to Cart
-        </button>
-        <button className="close-button" onClick={onClose}>Close</button>
-      </div>
-      <audio ref={audioRef} src="path/to/ingredient-sound.mp3" />
-    </div>
-  );
+  pedidosNovos.forEach(pedido => {
+    const pedidoElement = criarElementoPedido(pedido, true);
+    novosContainer.appendChild(pedidoElement);
+  });
 }
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [dishes, setDishes] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [customizingDish, setCustomizingDish] = useState(null);
-  const mapRef = useRef(null);
-  const activeTab = useRef('home');
+function atualizarPedidosAceitos() {
+  const emAndamentoContainer = document.getElementById('pedidos-em-andamento');
+  const entreguesContainer = document.getElementById('pedidos-entregues');
+  emAndamentoContainer.innerHTML = '';
+  entreguesContainer.innerHTML = '';
 
-  const categories = ['all', 'main', 'sides', 'desserts', 'drinks'];
-
-  useEffect(() => {
-    fetch('http://localhost:3001/api/dishes')
-      .then(response => response.json())
-      .then(data => setDishes(data))
-      .catch(error => console.error('Error fetching dishes:', error));
-
-    setRecommendations([
-      'Experimente nossa nova Pizza 4D, baseada nos seus pedidos anteriores!',
-      'Que tal um Burger Holográfico para acompanhar sua refeição hoje?',
-      'Nossa Sobremesa Molecular combina perfeitamente com o seu prato favorito!',
-    ]);
-
-    initMap();
-  }, []);
-
-  function initMap() {
-    if (!mapRef.current) return;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, mapRef.current.clientWidth / mapRef.current.clientHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-
-    renderer.setSize(mapRef.current.clientWidth, mapRef.current.clientHeight);
-    mapRef.current.appendChild(renderer.domElement);
-
-    const gridHelper = new THREE.GridHelper(100, 20, 0x00ffff, 0x00ffff);
-    scene.add(gridHelper);
-
-    const geometry = new THREE.SphereGeometry(0.5, 32, 32);
-    const material = new THREE.MeshBasicMaterial({ color: 0xff00ff });
-    const deliveryMarker = new THREE.Mesh(geometry, material);
-    scene.add(deliveryMarker);
-
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ffff });
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(-5, 0, -5),
-      new THREE.Vector3(5, 0, 5)
-    ]);
-    const line = new THREE.Line(lineGeometry, lineMaterial);
-    scene.add(line);
-
-    camera.position.z = 15;
-    camera.position.y = 5;
-    camera.lookAt(0, 0, 0);
-
-    function animate() {
-      requestAnimationFrame(animate);
-
-      const time = Date.now() * 0.001;
-      deliveryMarker.position.x = Math.sin(time) * 5;
-      deliveryMarker.position.z = Math.cos(time) * 5;
-      deliveryMarker.position.y = Math.sin(time * 2) * 0.5 + 1;
-
-      const linePositions = line.geometry.attributes.position.array;
-      for (let i = 0; i < linePositions.length; i += 3) {
-        linePositions[i + 1] = Math.sin(time + i) * 0.5;
-      }
-      line.geometry.attributes.position.needsUpdate = true;
-
-      renderer.render(scene, camera);
+  pedidosAceitos.forEach(pedido => {
+    const pedidoElement = criarElementoPedido(pedido, false);
+    if (pedido.status === 'Entregue') {
+      entreguesContainer.appendChild(pedidoElement);
+    } else {
+      emAndamentoContainer.appendChild(pedidoElement);
     }
+  });
+}
 
-    animate();
+function criarElementoPedido(pedido, isNovo) {
+  const pedidoElement = document.createElement('div');
+  pedidoElement.className = 'pedido';
+  pedidoElement.innerHTML = `
+    <h3>Pedido #${pedido.id}</h3>
+    <p><strong>Cliente:</strong> ${pedido.cliente}</p>
+    <p><strong>Telefone:</strong> <span id="telefone-${pedido.id}">${pedido.telefone}</span></p>
+    <input type="tel" id="edit-telefone-${pedido.id}" value="${pedido.telefone}" style="display:none;">
+    <p><strong>EndereÃ§o:</strong> ${pedido.endereco}</p>
+    <p><strong>Itens:</strong> ${pedido.itens}</p>
+    <p><strong>DescriÃ§Ã£o:</strong> ${pedido.descricao}</p>
+    <p><strong>Forma de Pagamento:</strong> ${pedido.formaPagamento}</p>
+    <p><strong>Valor:</strong> R$ ${pedido.valor.toFixed(2)}</p>
+    <p><strong>Taxa de Entrega:</strong> R$ ${pedido.taxaEntrega.toFixed(2)}</p>
+    <p><strong>Status:</strong> ${pedido.status}</p>
+    ${isNovo ? `
+      <button class="aceitar-button" onclick="aceitarPedido(${pedido.id})">Aceitar Pedido</button>
+      <button class="recusar-button" onclick="recusarPedido(${pedido.id})">Recusar Pedido</button>
+    ` : `
+      <select id="status-${pedido.id}">
+        <option value="Confirmado" ${pedido.status === 'Confirmado' ? 'selected' : ''}>Confirmado</option>
+        <option value="Em Preparo" ${pedido.status === 'Em Preparo' ? 'selected' : ''}>Em Preparo</option>
+        <option value="Pronto" ${pedido.status === 'Pronto' ? 'selected' : ''}>Pronto</option>
+        <option value="Entregue" ${pedido.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
+      </select>
+      <button onclick="atualizarStatus(${pedido.id})">Atualizar Status</button>
+      <button class="edit-button" onclick="editarTelefone(${pedido.id})">Editar Telefone</button>
+      <button class="save-button" onclick="salvarTelefone(${pedido.id})">Salvar Telefone</button>
+      <button class="print-button" onclick="imprimirPedido(${pedido.id})">Imprimir Pedido</button>
+    `}
+  `;
+  return pedidoElement;
+}
+
+function adicionarNovoPedido(pedido) {
+  pedido.id = proximoId++;
+  pedido.valor = parseFloat(pedido.valor);
+  pedido.taxaEntrega = 5.00; 
+  pedidosNovos.push(pedido);
+  atualizarPedidos();
+  playNotificationSound(); // Play sound when new order is added
+}
+
+function playNotificationSound() {
+  const audio = document.getElementById('notificationSound');
+  audio.play();
+}
+
+function aceitarPedido(id) {
+  const pedidoIndex = pedidosNovos.findIndex(p => p.id === id);
+  if (pedidoIndex !== -1) {
+    const pedido = pedidosNovos.splice(pedidoIndex, 1)[0];
+    pedido.status = 'Confirmado';
+    pedido.categoria = 'Em Andamento';
+    pedidosAceitos.push(pedido);
+    enviarNotificacao(pedido);
+    imprimirPedido(pedido.id);
+    solicitarEntregador(pedido);
+    atualizarPedidos();
+  }
+}
+
+function recusarPedido(id) {
+  const pedidoIndex = pedidosNovos.findIndex(p => p.id === id);
+  if (pedidoIndex !== -1) {
+    const pedido = pedidosNovos.splice(pedidoIndex, 1)[0];
+    enviarNotificacaoRecusa(pedido);
+    atualizarPedidos();
+  }
+}
+
+function atualizarStatus(id) {
+  const pedido = pedidosAceitos.find(p => p.id === id);
+  const novoStatus = document.getElementById(`status-${id}`).value;
+  
+  if (pedido.status !== novoStatus) {
+    pedido.status = novoStatus;
+    if (novoStatus === 'Entregue') {
+      pedido.categoria = 'Entregue';
+    }
+    enviarNotificacao(pedido);
+    atualizarPedidos();
+  }
+}
+
+function editarTelefone(id) {
+  const telefoneSpan = document.getElementById(`telefone-${id}`);
+  const telefoneInput = document.getElementById(`edit-telefone-${id}`);
+  const editButton = telefoneSpan.parentNode.parentNode.querySelector('.edit-button');
+  const saveButton = telefoneSpan.parentNode.parentNode.querySelector('.save-button');
+
+  telefoneSpan.style.display = 'none';
+  telefoneInput.style.display = 'block';
+  editButton.style.display = 'none';
+  saveButton.style.display = 'inline-block';
+  telefoneInput.focus();
+}
+
+function salvarTelefone(id) {
+  const telefoneSpan = document.getElementById(`telefone-${id}`);
+  const telefoneInput = document.getElementById(`edit-telefone-${id}`);
+  const editButton = telefoneSpan.parentNode.parentNode.querySelector('.edit-button');
+  const saveButton = telefoneSpan.parentNode.parentNode.querySelector('.save-button');
+
+  const novoTelefone = telefoneInput.value.trim();
+  if (novoTelefone) {
+    const pedido = pedidosAceitos.find(p => p.id === id) || pedidosNovos.find(p => p.id === id);
+    pedido.telefone = novoTelefone;
+    telefoneSpan.textContent = novoTelefone;
   }
 
-  const filteredDishes = selectedCategory === 'all'
-    ? dishes
-    : dishes.filter(dish => dish.category === selectedCategory);
+  telefoneSpan.style.display = 'inline';
+  telefoneInput.style.display = 'none';
+  editButton.style.display = 'inline-block';
+  saveButton.style.display = 'none';
+}
 
-  if (!isLoggedIn) {
-    return <LoginRegister onLogin={() => setIsLoggedIn(true)} />;
+function enviarNotificacao(pedido) {
+  let mensagem;
+  if (pedido.status === 'Confirmado') {
+    mensagem = `OlÃ¡ ${pedido.cliente}! Estamos muito felizes em confirmar seu pedido #${pedido.id}! ðŸ˜ŠðŸŽ‰\n\nSeu delicioso ${pedido.itens} (${pedido.descricao}) estÃ¡ sendo preparado com todo carinho e cuidado. Aguarde mais um pouquinho, logo logo estarÃ¡ a caminho!`;
+  } else if (pedido.status === 'Em Preparo') {
+    mensagem = `Oi ${pedido.cliente}! Temos Ã³timas notÃ­cias! ðŸŒŸ\nSeu pedido #${pedido.id} (${pedido.itens}) jÃ¡ estÃ¡ em preparo. Nossos chefs estÃ£o caprichando para que fique uma delÃ­cia!`;
+  } else if (pedido.status === 'Pronto') {
+    mensagem = `${pedido.cliente}, prepare-se! ðŸš€\nSeu pedido #${pedido.id} (${pedido.itens}) estÃ¡ pronto e irresistÃ­vel! Em breve, nosso entregador estarÃ¡ a caminho com sua refeiÃ§Ã£o quentinha.`;
+  } else if (pedido.status === 'Entregue') {
+    mensagem = `${pedido.cliente}, esperamos que aproveite muito! ðŸŽŠ\nSeu pedido #${pedido.id} (${pedido.itens}) foi entregue. Agradecemos sua preferÃªncia e desejamos um excelente apetite! NÃ£o hesite em nos contatar para qualquer feedback.`;
+  } else {
+    mensagem = `OlÃ¡ ${pedido.cliente}! Temos uma atualizaÃ§Ã£o sobre seu pedido #${pedido.id} (${pedido.itens}).\nNovo status: ${pedido.status}\nContinuamos trabalhando para proporcionar a melhor experiÃªncia possÃ­vel!`;
   }
-
-  return (
-    <div>
-      <ParticleBackground />
-      <header className="header">
-        <h1 className="neon-text">Delivery Futurista</h1>
-      </header>
-      <nav className="nav-menu">
-        <div className="nav-item" onClick={() => activeTab.current = 'home'}>Início</div>
-        <div className="nav-item" onClick={() => activeTab.current = 'menu'}>Cardápio</div>
-        <div className="nav-item" onClick={() => activeTab.current = 'orders'}>Pedidos</div>
-        <div className="nav-item" onClick={() => activeTab.current = 'profile'}>Perfil</div>
-      </nav>
-      <div className="content">
-        {activeTab.current === 'home' && <Home dishes={dishes} recommendations={recommendations} />}
-        {activeTab.current === 'menu' && (
-          <>
-            <CategorySelector
-              categories={categories}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-            />
-            <Menu dishes={filteredDishes} setCustomizingDish={setCustomizingDish} />
-          </>
-        )}
-        {activeTab.current === 'orders' && <Orders mapRef={mapRef} />}
-        {activeTab.current === 'profile' && <Profile />}
-      </div>
-      {customizingDish && (
-        <DishDetails
-          dish={customizingDish}
-          onClose={() => setCustomizingDish(null)}
-          onAddToCart={(dish) => {
-            console.log('Added to cart:', dish);
-            setCustomizingDish(null);
-          }}
-        />
-      )}
-    </div>
-  );
+  const urlWhatsApp = `https://api.whatsapp.com/send?phone=${pedido.telefone}&text=${encodeURIComponent(mensagem)}`;
+  
+  console.log(`Enviando mensagem para ${pedido.telefone}: ${mensagem}`);
+  window.open(urlWhatsApp, '_blank');
 }
 
-function Home({ dishes, recommendations }) {
-  return (
-    <div>
-      <h2 className="neon-text">Destaques</h2>
-      <div id="dish-gallery">
-        {dishes.map(dish => (
-          <DishCard key={dish.id} dish={dish} />
-        ))}
-      </div>
-      <h2 className="neon-text">Recomendados para você</h2>
-      {recommendations.map((rec, index) => (
-        <div key={index} className="recommendation">{rec}</div>
-      ))}
-    </div>
-  );
+function enviarNotificacaoRecusa(pedido) {
+  const mensagem = `Prezado(a) ${pedido.cliente}, lamentamos profundamente informar que nÃ£o poderemos atender seu pedido #${pedido.id} (${pedido.itens} - ${pedido.descricao}) neste momento. ðŸ˜”\n\nPedimos sinceras desculpas pelo inconveniente causado. Estamos sempre trabalhando para melhorar nosso atendimento e esperamos poder servi-lo(a) em uma prÃ³xima oportunidade.\n\nSe houver algo que possamos fazer para compensar, por favor, nÃ£o hesite em nos contatar. Sua satisfaÃ§Ã£o Ã© muito importante para nÃ³s!`;
+  const urlWhatsApp = `https://api.whatsapp.com/send?phone=${pedido.telefone}&text=${encodeURIComponent(mensagem)}`;
+  
+  console.log(`Enviando mensagem de recusa para ${pedido.telefone}: ${mensagem}`);
+  window.open(urlWhatsApp, '_blank');
 }
 
-function DishCard({ dish, setCustomizingDish }) {
-  return (
-    <div 
-      className="dish-card"
-      onClick={() => setCustomizingDish(dish)}
-    >
-      <img 
-        src={dish.image} 
-        alt={dish.name} 
-        className="dish-image" 
-      />
-      <h3 className="dish-title">{dish.name}</h3>
-      <p className="dish-description">{dish.description}</p>
-      <p className="dish-price">R$ {dish.price.toFixed(2)}</p>
-      <button 
-        className="order-button"
-        onClick={() => setCustomizingDish(dish)}
-      >
-        Personalizar
-      </button>
-    </div>
-  );
+function imprimirPedido(id) {
+  const { jsPDF } = window.jspdf;
+  const pedido = pedidosAceitos.find(p => p.id === id) || pedidosNovos.find(p => p.id === id);
+  
+  if (pedido) {
+    const doc = new jsPDF();
+
+    doc.setFontSize(22);
+    doc.setTextColor(41, 128, 185);
+    doc.text(`Pedido #${pedido.id}`, 105, 20, null, null, 'center');
+
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('InformaÃ§Ãµes do Cliente:', 20, 40);
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(12);
+    doc.text(`Nome: ${pedido.cliente}`, 25, 50);
+    doc.text(`Telefone: ${pedido.telefone}`, 25, 60);
+    doc.text(`EndereÃ§o: ${pedido.endereco}`, 25, 70);
+
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('Detalhes do Pedido:', 20, 90);
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(12);
+    doc.text(`Itens: ${pedido.itens}`, 25, 100);
+    doc.text(`DescriÃ§Ã£o: ${pedido.descricao}`, 25, 110);
+    doc.text(`Forma de Pagamento: ${pedido.formaPagamento}`, 25, 120);
+    doc.text(`Valor: R$ ${pedido.valor.toFixed(2)}`, 25, 130);
+    doc.text(`Taxa de Entrega: R$ ${pedido.taxaEntrega.toFixed(2)}`, 25, 140);
+    doc.text(`Total: R$ ${(pedido.valor + pedido.taxaEntrega).toFixed(2)}`, 25, 150);
+
+    doc.setFontSize(16);
+    doc.setFont(undefined, 'bold');
+    doc.text('Status do Pedido:', 20, 170);
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(12);
+    doc.text(`Status Atual: ${pedido.status}`, 25, 180);
+    
+    const dataHora = new Date().toLocaleString('pt-BR');
+    doc.text(`Impresso em: ${dataHora}`, 20, 200);
+
+    doc.setFontSize(10);
+    doc.text('Obrigado pela preferÃªncia! Volte sempre!', 105, 220, null, null, 'center');
+
+    doc.save(`Pedido_${pedido.id}.pdf`);
+
+    const pdfData = doc.output('blob');
+    const url = URL.createObjectURL(pdfData);
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = url;
+    document.body.appendChild(iframe);
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  } else {
+    alert('Pedido nÃ£o encontrado!');
+  }
 }
 
-function Menu({ dishes, setCustomizingDish }) {
-  return (
-    <div>
-      <h2 className="neon-text">Nosso Cardápio Futurista</h2>
-      {dishes.map(dish => (
-        <DishCard key={dish.id} dish={dish} setCustomizingDish={setCustomizingDish} />
-      ))}
-    </div>
-  );
+function solicitarEntregador(pedido) {
+  const enderecoEstabelecimento = "Rua do Estabelecimento, 123"; 
+  const mensagem = `Novo pedido para entrega!\n
+    EndereÃ§o de coleta: ${enderecoEstabelecimento}\n
+    EndereÃ§o de entrega: ${pedido.endereco}\n
+    Taxa de entrega: R$ ${pedido.taxaEntrega.toFixed(2)}`;
+  
+  console.log("SolicitaÃ§Ã£o de entregador enviada:");
+  console.log(mensagem);
+  
+  alert("SolicitaÃ§Ã£o de entregador enviada com sucesso!");
 }
 
-function CategorySelector({ categories, selectedCategory, setSelectedCategory }) {
-  return (
-    <div className="category-selector">
-      {categories.map(category => (
-        <button
-          key={category}
-          className={`category-button ${selectedCategory === category ? 'active' : ''}`}
-          onClick={() => setSelectedCategory(category)}
-        >
-          {category.charAt(0).toUpperCase() + category.slice(1)}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function Orders({ mapRef }) {
-  return (
-    <div>
-      <h2 className="neon-text">Rastreamento de Pedido</h2>
-      <div id="map-container" ref={mapRef}></div>
-      <p>Seu pedido está a caminho! Tempo estimado de entrega: 15 minutos</p>
-    </div>
-  );
-}
-
-function Profile() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
-  const [phone, setPhone] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Perfil salvo:', { name, email, address, phone });
+setInterval(() => {
+  const novoPedido = {
+    cliente: `Cliente ${proximoId}`,
+    telefone: `556399${Math.floor(1000000 + Math.random() * 9000000)}`,
+    itens: `Pedido AleatÃ³rio ${proximoId}`,
+    status: 'Pendente',
+    descricao: `DescriÃ§Ã£o do pedido ${proximoId}`,
+    endereco: `EndereÃ§o ${proximoId}`,
+    formaPagamento: Math.random() > 0.5 ? 'CartÃ£o de CrÃ©dito' : 'Dinheiro',
+    valor: parseFloat((Math.floor(Math.random() * 100) + 20).toFixed(2)),
+    taxaEntrega: 5.00 
   };
+  adicionarNovoPedido(novoPedido);
+}, 30000);
 
-  return (
-    <div>
-      <h2 className="neon-text">Seu Perfil</h2>
-      <form onSubmit={handleSubmit} className="profile-section">
-        <div className="profile-info">
-          <label htmlFor="name">Nome:</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-
-          <label htmlFor="email">E-mail:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <label htmlFor="address">Endereço:</label>
-          <input
-            type="text"
-            id="address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            required
-          />
-
-          <label htmlFor="phone">Telefone:</label>
-          <input
-            type="tel"
-            id="phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="save-profile">Salvar Perfil</button>
-      </form>
-    </div>
-  );
-}
-
-ReactDOM.render(<App />, document.getElementById('root'));
+atualizarPedidos();
 </script>
-</body></html>
+
+</body>
+</html>
